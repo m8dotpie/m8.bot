@@ -13,7 +13,8 @@ async def process_log_data(data, callback):
             log_entry = json.loads(log_entry_json)
 
             # Call the callback function with the log entry as an argument
-            await callback(log_entry)
+            if callback:
+                await callback(log_entry)
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
             print(f"Invalid JSON received: {log_entry_json}")

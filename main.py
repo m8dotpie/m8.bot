@@ -6,6 +6,11 @@ import os
 
 import multiprocessing
 
+def simple_callback(log_entry):
+    req = log_entry['request']
+    if req['uri'] == '/':
+        print(f"Access from {req['remote_ip']}")
+
 async def main():
 
     load_dotenv()
