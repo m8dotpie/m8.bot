@@ -21,15 +21,17 @@ async def main():
 
     WEBHOOK_SSL_CERT = os.getenv('WEBHOOK_CERT')  # Path to the ssl certificate
     WEBHOOK_SSL_PRIV = os.getenv('WEBHOOK_PKEY')  # Path to the ssl private key
-    DOMAIN = os.getenv('WEBHOOK_DOMAIN') # either domain, or ip address of vps
+    WEBHOOK_DOMAIN = os.getenv('WEBHOOK_DOMAIN') # either domain, or ip address of vps
+    WEBHOOK_PORT = os.getenv('WEBHOOK_PORT') # port to listen on
+    WEBHOOK_URL = f"{WEBHOOK_DOMAIN}:{WEBHOOK_PORT}"
 
     await asyncio.gather(
         start_log_listener(LOG_HOST, LOG_PORT, callback=simple_callback),
-        # bot.run_webhooks(
-        #     listen=DOMAIN,
-        #     certificate=WEBHOOK_SSL_CERT,
-        #     certificate_key=WEBHOOK_SSL_PRIV
-        # )
+        bot.run_webhooks(
+            listen=WEBHOOK_URL,
+            certificate=WEBHOOK_SSL_CERT,
+            certificate_key=WEBHOOK_SSL_PRIV
+        )
     )
 
 if __name__ == '__main__':
