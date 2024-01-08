@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Expose the port where the socket server will listen (use the same port as in the Python script)
-EXPOSE 12345
+EXPOSE 4000
 
 # Command to run the Python script
 CMD ["python", "-u", "main.py" ]
