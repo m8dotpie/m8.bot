@@ -17,11 +17,11 @@ async def main():
 
     await asyncio.gather(
         start_log_listener(LOG_HOST, LOG_PORT, callback=print),
-        bot.run_webhooks(
-            listen=DOMAIN,
-            certificate=WEBHOOK_SSL_CERT,
-            certificate_key=WEBHOOK_SSL_PRIV
-        )
+        # bot.run_webhooks(
+        #     listen=DOMAIN,
+        #     certificate=WEBHOOK_SSL_CERT,
+        #     certificate_key=WEBHOOK_SSL_PRIV
+        # )
     )
 
 if __name__ == '__main__':
