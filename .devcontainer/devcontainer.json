@@ -1,0 +1,12 @@
+{
+    "name": "Python Dev Container",
+    "dockerComposeFile": ["docker-compose.yml"],
+    "service": "m8.bot", // Specify the name of the service to run (optional)
+    "workspaceFolder": "/app", // Specify the workspace folder in the container
+    "customizations": {
+      "vscode": {
+        "extensions": []
+      }
+    },
+    "initializeCommand": "ls"
+  }
