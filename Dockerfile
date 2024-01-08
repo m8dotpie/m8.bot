@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 EXPOSE 12345
 
 # Command to run the Python script
-CMD ["python", "-u", "src/main.py" ]
+CMD ["python", "-u", "main.py" ]
