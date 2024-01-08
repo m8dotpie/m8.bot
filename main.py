@@ -24,7 +24,7 @@ async def main():
     DOMAIN = os.getenv('WEBHOOK_DOMAIN') # either domain, or ip address of vps
 
     await asyncio.gather(
-        start_log_listener(LOG_HOST, LOG_PORT, callback=print),
+        start_log_listener(LOG_HOST, LOG_PORT, callback=simple_callback),
         # bot.run_webhooks(
         #     listen=DOMAIN,
         #     certificate=WEBHOOK_SSL_CERT,
