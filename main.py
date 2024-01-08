@@ -29,7 +29,7 @@ async def main():
             listen=WEBHOOK_DOMAIN,
             certificate=WEBHOOK_SSL_CERT,
             certificate_key=WEBHOOK_SSL_PRIV
-        )
+        ), return_exceptions=True
     )
 
 if __name__ == '__main__':
