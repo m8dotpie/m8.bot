@@ -27,10 +27,10 @@ async def main():
         start_log_listener(LOG_HOST, LOG_PORT, callback=simple_callback),
         bot.run_webhooks(
             listen="0.0.0.0",
-            port=8443,
+            port=5000,
             webhook_url=WEBHOOK_DOMAIN,
-            certificate=WEBHOOK_SSL_CERT,
-            certificate_key=WEBHOOK_SSL_PRIV
+            # certificate=WEBHOOK_SSL_CERT,
+            # certificate_key=WEBHOOK_SSL_PRIV
         ), return_exceptions=True
     )
 
