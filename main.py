@@ -28,7 +28,7 @@ async def main():
         bot.run_webhooks(
             listen="0.0.0.0",
             port=5000,
-            url_path='/',
+            url_path='webhook/',
             webhook_url=WEBHOOK_DOMAIN,
             # certificate=WEBHOOK_SSL_CERT,
             # certificate_key=WEBHOOK_SSL_PRIV
