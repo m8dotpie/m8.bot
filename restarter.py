@@ -13,9 +13,6 @@ from time import sleep
 load_dotenv()
 
 PORT = int(os.getenv("GITHUB_WEBHOOK_PORT"))
-START_COMMAND = ['python', '-u', 'main.py']
-
-# Store the process ID of the running Python script
 running_process = None
 
 async def github_webhook(request: Request):
@@ -23,7 +20,6 @@ async def github_webhook(request: Request):
     body = await request.json()
     if event == 'push' and body['ref'] == 'refs/heads/main':
         git_pull()
-        restart_python_script()
 
         return JSONResponse({'message': 'Webhook received and processed.'})
 
@@ -35,21 +31,6 @@ def git_pull():
     except subprocess.CalledProcessError as e:
         print(f"Git pull failed: {e}")
 
-def restart_python_script():
-    global running_process
-    if running_process is not None:
-        # Terminate the running Python script
-        try:
-            os.kill(running_process.pid, signal.SIGTERM)
-        except ProcessLookupError:
-            pass  # Process has already terminated
-
-    print('Sleeping before start')
-    sleep(2)
-    print('Starting')
-    # Start the Python script as a new process
-    running_process = subprocess.Popen(START_COMMAND)
-
 routes = [
     Route('/', github_webhook, methods=['POST']),
 ]
@@ -57,6 +38,4 @@ routes = [
 app = Starlette(routes=routes)
 
 if __name__ == '__main__':
-    running_process = subprocess.Popen(START_COMMAND)
-
     uvicorn.run(app, host='0.0.0.0', port=PORT)

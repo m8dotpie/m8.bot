@@ -9,4 +9,4 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Command to run the Python script
-CMD ["python", "-u", "restarter.py" ]
+CMD ["python", "-u", "restarter.py", ";", "python", "-u", "main.py" ]
