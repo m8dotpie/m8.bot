@@ -30,7 +30,7 @@ async def start_log_listener(callback):
         server = await asyncio.start_server(
              partial(client_connected, callback=callback), HOST, PORT)
 
-        print(f"Listening for logs on {host}:{port}")
+        print(f"Listening for logs on {HOST}:{PORT}")
 
         async with server:
             await server.serve_forever()
