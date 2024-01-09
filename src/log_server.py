@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import asyncio
-import socket
 import json
+import os
 from functools import partial
 
 async def process_log_data(data, callback):
