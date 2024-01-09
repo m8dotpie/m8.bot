@@ -61,22 +61,20 @@ async def send_admin_message(message: str):
 
 @bot.message_handler(commands=["start"])
 async def handle_start(message):
-    markup = telebot.types.InlineKeyboardMarkup()
-    vps_status_button = telebot.types.InlineKeyboardButton(
-        "VPS Status", callback_data="vps_status"
-    )
-    markup.add(vps_status_button)
+    menu_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    vps_status_button = telebot.types.KeyboardButton("VPS Status")
+    menu_markup.add(vps_status_button)
 
     await bot.send_message(
         message.chat.id,
         "Click the 'VPS Status' button to check the status:",
-        reply_markup=markup,
+        reply_markup=menu_markup,
     )
 
 
-@bot.callback_query_handler(func=lambda call: call.data == "vps_status")
-async def handle_vps_status(callback_query):
-    await bot.send_message(callback_query.message.chat.id, "None")
+@bot.message_handler(func=lambda message: message.text == "VPS Status")
+async def handle_vps_status(message):
+    await bot.send_message(message.chat.id, "None")
 
 
 @bot.message_handler(func=lambda _: True, content_types=["text"])
