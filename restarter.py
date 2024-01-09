@@ -19,7 +19,7 @@ running_process = None
 async def github_webhook(request: Request):
     event = request.headers.get('X-GitHub-Event')
 
-    if event == 'push' and request['body']['ref'] == 'refs/heads/main':
+    if event == 'push' and request['ref'] == 'refs/heads/main':
         git_pull()
         restart_python_script()
 
