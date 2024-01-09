@@ -76,7 +76,20 @@ async def handle_start(message):
 @bot.message_handler(func=lambda message: message.text == "VPS Status")
 async def handle_vps_status(message):
     cpu_usage = psutil.cpu_percent(interval=1)  # Get CPU usage as a percentage
-    await bot.send_message(message.chat.id, f"CPU Usage: {cpu_usage}%")
+    memory_info = psutil.virtual_memory()
+    storage_info = psutil.disk_usage("/")
+
+    response = (
+        f"CPU Usage: {cpu_usage}%\n"
+        f"Memory Usage:\n"
+        f"  Total: {memory_info.total / (1024 ** 3):.2f} GB\n"
+        f"  Used: {memory_info.used / (1024 ** 3):.2f} GB\n"
+        f"Storage Usage:\n"
+        f"  Total: {storage_info.total / (1024 ** 3):.2f} GB\n"
+        f"  Used: {storage_info.used / (1024 ** 3):.2f} GB"
+    )
+
+    await bot.send_message(message.chat.id, response)
 
 
 @bot.message_handler(func=lambda _: True, content_types=["text"])
