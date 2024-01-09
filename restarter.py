@@ -10,7 +10,7 @@ import os
 
 load_dotenv()
 
-PORT = os.getenv("GITHUB_WEBHOOK_PORT")
+PORT = int(os.getenv("GITHUB_WEBHOOK_PORT"))
 START_COMMAND = ['python', '-u', 'main.py']
 
 # Store the process ID of the running Python script
