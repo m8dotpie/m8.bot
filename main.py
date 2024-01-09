@@ -10,8 +10,8 @@ async def simple_callback(log_entry):
 async def main():
 
     await asyncio.gather(
-        start_log_listener(LOG_HOST, LOG_PORT, callback=simple_callback),
-        run_bot(), return_exceptions=False
+        start_log_listener(callback=simple_callback),
+        run_bot()
     )
 
 if __name__ == '__main__':
