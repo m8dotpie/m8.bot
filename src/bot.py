@@ -136,6 +136,7 @@ async def startup() -> None:
 
 
 async def start_status_service():
+    global status_message_id
     if status_message_id is None:
         status_message_id = await bot.send_message(
             ADMIN_CHANNEL_ID, "Starting status service..."
