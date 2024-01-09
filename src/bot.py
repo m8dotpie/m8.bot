@@ -10,6 +10,7 @@ import telebot
 import aiohttp
 import random
 import string
+import psutil
 import os
 
 load_dotenv()
@@ -67,14 +68,15 @@ async def handle_start(message):
 
     await bot.send_message(
         message.chat.id,
-        "Click the 'VPS Status' button to check the status:",
+        "Click the 'VPS Status' button to check the CPU usage:",
         reply_markup=menu_markup,
     )
 
 
 @bot.message_handler(func=lambda message: message.text == "VPS Status")
 async def handle_vps_status(message):
-    await bot.send_message(message.chat.id, "None")
+    cpu_usage = psutil.cpu_percent(interval=1)  # Get CPU usage as a percentage
+    await bot.send_message(message.chat.id, f"CPU Usage: {cpu_usage}%")
 
 
 @bot.message_handler(func=lambda _: True, content_types=["text"])
