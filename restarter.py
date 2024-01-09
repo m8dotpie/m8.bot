@@ -7,6 +7,7 @@ from starlette.responses import JSONResponse
 import subprocess
 from dotenv import load_dotenv
 import os
+import signal
 
 load_dotenv()
 
@@ -38,7 +39,7 @@ def restart_python_script():
     if running_process is not None:
         # Terminate the running Python script
         try:
-            os.kill(running_process.pid, os.SIGTERM)
+            os.kill(running_process.pid, signal.SIGTERM)
         except ProcessLookupError:
             pass  # Process has already terminated
 
