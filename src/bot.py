@@ -6,7 +6,7 @@ This is a simple bot that echoes each message that is received onto the chat.
 It uses the Starlette ASGI framework to receive updates via webhook requests.
 """
 
-import uvicorn
+from uvicorn import Server, Config
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse, Response
@@ -86,8 +86,7 @@ async def run() -> None:
     )
 
     print('Starting uvicorn server')
-    uvicorn.run(
-        app,
-        host=WEBHOOK_LISTEN,
-        port=WEBHOOK_PORT
-    )
+    config = Config(app=app, host=WEBHOOK_LISTEN, port=WEBHOOK_PORT)
+    server = Server(config)
+    await server.serve()
+    await bot.close_session()
