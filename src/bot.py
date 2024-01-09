@@ -52,7 +52,7 @@ async def send_welcome(message: Message):
     """
     await bot.reply_to(
         message,
-        ("Hi there, I am EchoBot.\n" "I am here to echo your kind words back to you."),
+        ("Hi there, I am EchoBot."),
     )
 
 
