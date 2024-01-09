@@ -26,7 +26,8 @@ bot = AsyncTeleBot(token=API_TOKEN)
 
 async def get_location(remote_ip: str) -> dict:
     url = f'https://ipapi.co/{remote_ip}/json/'
-    response = await aiohttp.request("GET", url)
+    response = await aiohttp.ClientSession().get(url)
+    response = await response.json()
     location_data = {
         "ip": remote_ip,
         "city": response.get("city"),
