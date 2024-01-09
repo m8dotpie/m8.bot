@@ -19,8 +19,16 @@ WEBHOOK_PORT = int(os.getenv("WEBHOOK_PORT"))
 WEBHOOK_LISTEN = "0.0.0.0"
 WEBHOOK_URL = f"https://{WEBHOOK_HOST}/webhook"
 WEBHOOK_SECRET_TOKEN = ''.join(random.choices(string.ascii_uppercase + string.digits, k=secret_token_length))
+ADMIN_CHANNEL_ID = os.getenv("ADMIN_CHANNEL_ID")
 
 bot = AsyncTeleBot(token=API_TOKEN)
+
+async def access_callback(log_entry):
+    req = log_entry['request']
+    if req['uri'] != '/':
+        return
+    
+    await bot.send_message(ADMIN_CHANNEL_ID, f"CV access from {req['remote_ip']}.")
 
 # BOT HANDLERS
 @bot.message_handler(commands=["help", "start"])
