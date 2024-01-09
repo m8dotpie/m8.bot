@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import asyncio
 import socket
 import json
@@ -21,10 +22,13 @@ async def process_log_data(data, callback):
     except Exception as e:
         print(f"Error: {e}")
 
-async def start_log_listener(host, port, callback):
+async def start_log_listener(callback):
+    load_dotenv()
+    HOST = os.getenv("CADDY_LOG_HOST")
+    PORT = int(os.getenv("CADDY_LOG_PORT"))
     try:
         server = await asyncio.start_server(
-             partial(client_connected, callback=callback), host, port)
+             partial(client_connected, callback=callback), HOST, PORT)
 
         print(f"Listening for logs on {host}:{port}")
 
