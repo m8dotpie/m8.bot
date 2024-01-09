@@ -1,7 +1,6 @@
 from src.log_server import start_log_listener
 from src.bot import run as run_bot
-
-import multiprocessing
+import asyncio
 
 async def simple_callback(log_entry):
     req = log_entry['request']
