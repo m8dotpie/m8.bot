@@ -1,5 +1,5 @@
 from src.log_server import start_log_listener
-from src.bot import bot
+from src.bot import run as run_bot
 from dotenv import load_dotenv
 import asyncio
 import os
@@ -25,15 +25,7 @@ async def main():
 
     await asyncio.gather(
         start_log_listener(LOG_HOST, LOG_PORT, callback=simple_callback),
-        bot.run_webhooks(
-            listen="0.0.0.0",
-            port=5000,
-            url_path='webhook/',
-            drop_pending_updates=True,
-            webhook_url=WEBHOOK_DOMAIN,
-            # certificate=WEBHOOK_SSL_CERT,
-            # certificate_key=WEBHOOK_SSL_PRIV
-        ), return_exceptions=True
+        run_bot(), return_exceptions=False
     )
 
 if __name__ == '__main__':
