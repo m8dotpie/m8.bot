@@ -18,7 +18,6 @@ import os
 load_dotenv()
 
 secret_token_length = 20
-status_message_id = None
 API_TOKEN = os.getenv("BOT_TOKEN")
 WEBHOOK_HOST = os.getenv("WEBHOOK_DOMAIN")
 WEBHOOK_PORT = int(os.getenv("WEBHOOK_PORT"))
@@ -136,16 +135,15 @@ async def startup() -> None:
 
 
 async def start_status_service():
-    global status_message_id
-    if status_message_id is None:
-        status_message_id = await bot.send_message(
+    if status_message is None:
+        status_message = await bot.send_message(
             ADMIN_CHANNEL_ID, "Starting status service..."
         )
 
     while True:
         status = await construct_vps_status()
         await bot.edit_message_text(
-            status, chat_id=ADMIN_CHANNEL_ID, message_id=status_message_id
+            status, chat_id=ADMIN_CHANNEL_ID, message_id=status_message.id
         )
         await asyncio.sleep(60)
 
