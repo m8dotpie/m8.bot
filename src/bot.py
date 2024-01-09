@@ -6,7 +6,7 @@ from starlette.routing import Route
 from telebot.async_telebot import AsyncTeleBot
 from telebot.types import Message, Update
 from dotenv import load_dotenv
-import requests
+import aiohttp
 import random
 import string
 import os
@@ -25,7 +25,8 @@ ADMIN_CHANNEL_ID = os.getenv("ADMIN_CHANNEL_ID")
 bot = AsyncTeleBot(token=API_TOKEN)
 
 async def get_location(remote_ip: str) -> dict:
-    response = requests.get(f'https://ipapi.co/{remote_ip}/json/').json()
+    url = f'https://ipapi.co/{remote_ip}/json/'
+    response = await aiohttp.request("GET", url)
     location_data = {
         "ip": remote_ip,
         "city": response.get("city"),
