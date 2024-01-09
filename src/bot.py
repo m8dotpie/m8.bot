@@ -27,7 +27,7 @@ bot = AsyncTeleBot(token=API_TOKEN)
 async def get_location(remote_ip: str) -> dict:
     response = requests.get(f'https://ipapi.co/{remote_ip}/json/').json()
     location_data = {
-        "ip": ip_address,
+        "ip": remote_ip,
         "city": response.get("city"),
         "region": response.get("region"),
         "country": response.get("country_name")
