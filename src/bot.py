@@ -23,12 +23,22 @@ ADMIN_CHANNEL_ID = os.getenv("ADMIN_CHANNEL_ID")
 
 bot = AsyncTeleBot(token=API_TOKEN)
 
+async def get_location(remote_ip: str) -> dict:
+    response = requests.get(f'https://ipapi.co/{remote_ip}/json/').json()
+    location_data = {
+        "ip": ip_address,
+        "city": response.get("city"),
+        "region": response.get("region"),
+        "country": response.get("country_name")
+    }
+    return location_data
+
 async def access_callback(log_entry):
     req = log_entry['request']
     if req['uri'] != '/':
         return
-    
-    await bot.send_message(ADMIN_CHANNEL_ID, f"CV access from {req['remote_ip']}.")
+    location_data = await get_location(req['remote_ip'])
+    await bot.send_message(ADMIN_CHANNEL_ID, f"CV access from {req['remote_ip']}.\nLocation: {location_data['city']}, {location_data['region']}, {location_data['country']}")
 
 # BOT HANDLERS
 @bot.message_handler(commands=["help", "start"])
