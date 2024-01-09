@@ -61,7 +61,7 @@ async def echo_message(message: Message):
     """
     Handle all other messages
     """
-    await bot.reply_to(message, message.text + ':echo')
+    await bot.reply_to(message, message.text)
 
 
 # WEBSERVER HANDLERS
