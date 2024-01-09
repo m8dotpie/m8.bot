@@ -13,10 +13,6 @@ from time import sleep
 load_dotenv()
 
 PORT = int(os.getenv("GITHUB_WEBHOOK_PORT"))
-START_COMMAND = ['python', '-u', 'main.py']
-
-# Store the process ID of the running Python script
-running_process = None
 
 async def github_webhook(request: Request):
     event = request.headers.get('X-GitHub-Event')
@@ -41,5 +37,4 @@ routes = [
 app = Starlette(routes=routes)
 
 if __name__ == '__main__':
-    running_process = subprocess.Popen(START_COMMAND)
     uvicorn.run(app, host='0.0.0.0', port=PORT)
