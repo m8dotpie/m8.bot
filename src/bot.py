@@ -8,6 +8,7 @@ from telebot.types import Message, Update
 from dotenv import load_dotenv
 import telebot
 import aiohttp
+import asyncio
 import random
 import string
 import psutil
@@ -63,18 +64,24 @@ async def send_admin_message(message: str):
 @bot.message_handler(commands=["start"])
 async def handle_start(message):
     menu_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    vps_status_button = telebot.types.KeyboardButton("VPS Status")
-    menu_markup.add(vps_status_button)
+    status_button = telebot.types.KeyboardButton("VPS Status")
+    menu_markup.add(status_button)
 
     await bot.send_message(
         message.chat.id,
-        "Click the 'VPS Status' button to check the CPU usage:",
+        "Click 'VPS Status' to check the CPU, Memory, and Storage usage:",
         reply_markup=menu_markup,
     )
 
 
 @bot.message_handler(func=lambda message: message.text == "VPS Status")
 async def handle_vps_status(message):
+    sent_message = await bot.send_message(message.chat.id, "Updating VPS status...")
+    await asyncio.sleep(1)  # Delay to display the "Updating VPS status..." message
+
+    # Remove the initial "VPS Status" message from the chat
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+
     cpu_usage = psutil.cpu_percent(interval=1)  # Get CPU usage as a percentage
     memory_info = psutil.virtual_memory()
     storage_info = psutil.disk_usage("/")
@@ -89,7 +96,9 @@ async def handle_vps_status(message):
         f"  Used: {storage_info.used / (1024 ** 3):.2f} GB"
     )
 
-    await bot.send_message(message.chat.id, response)
+    await bot.edit_message_text(
+        response, chat_id=message.chat.id, message_id=sent_message.message_id
+    )
 
 
 @bot.message_handler(func=lambda _: True, content_types=["text"])
