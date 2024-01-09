@@ -48,6 +48,11 @@ async def client_connected(reader, writer, callback):
                 break
 
             asyncio.create_task(process_log_data(data, callback))
+        
+        writer.close()
+        await writer.wait_closed()
+        print(f"Disconnected from {addr}")
 
     except Exception as e:
         print(f"Error: {e}")
+
