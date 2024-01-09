@@ -135,10 +135,9 @@ async def startup() -> None:
 
 
 async def start_status_service():
-    if status_message is None:
-        status_message = await bot.send_message(
-            ADMIN_CHANNEL_ID, "Starting status service..."
-        )
+    status_message = await bot.send_message(
+        ADMIN_CHANNEL_ID, "Starting status service..."
+    )
 
     while True:
         status = await construct_vps_status()
