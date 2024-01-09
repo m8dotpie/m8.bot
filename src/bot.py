@@ -25,16 +25,17 @@ ADMIN_CHANNEL_ID = os.getenv("ADMIN_CHANNEL_ID")
 bot = AsyncTeleBot(token=API_TOKEN)
 
 async def get_location(remote_ip: str) -> dict:
-    url = f'https://ipapi.co/{remote_ip}/json/'
-    response = await aiohttp.ClientSession().get(url)
-    response = await response.json()
-    location_data = {
-        "ip": remote_ip,
-        "city": response.get("city"),
-        "region": response.get("region"),
-        "country": response.get("country_name")
-    }
-    return location_data
+    async with aiohttp.ClientSession() as session:
+        url = f'https://ipapi.co/{remote_ip}/json/'
+        async with session.get(url) as response:
+            response = await response.json()
+            location_data = {
+                "ip": remote_ip,
+                "city": response.get("city"),
+                "region": response.get("region"),
+                "country": response.get("country_name")
+            }
+            return location_data
 
 async def access_callback(log_entry):
     req = log_entry['request']
