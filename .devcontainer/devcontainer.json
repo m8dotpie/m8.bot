@@ -5,7 +5,11 @@
     "workspaceFolder": "/app", // Specify the workspace folder in the container
     "customizations": {
       "vscode": {
-        "extensions": []
+        "extensions": [
+            "ms-python.black-formatter",
+            "ms-python.python",
+            "riussi.code-stats-vscode"
+        ]
       }
     },
     "initializeCommand": "ls"
