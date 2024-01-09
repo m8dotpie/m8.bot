@@ -6,6 +6,7 @@ from starlette.routing import Route
 from telebot.async_telebot import AsyncTeleBot
 from telebot.types import Message, Update
 from dotenv import load_dotenv
+import requests
 import random
 import string
 import os
