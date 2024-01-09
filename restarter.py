@@ -8,6 +8,7 @@ import subprocess
 from dotenv import load_dotenv
 import os
 import signal
+from time import sleep
 
 load_dotenv()
 
@@ -43,6 +44,9 @@ def restart_python_script():
         except ProcessLookupError:
             pass  # Process has already terminated
 
+    print('Sleeping before start')
+    sleep(2)
+    print('Starting')
     # Start the Python script as a new process
     running_process = subprocess.Popen(START_COMMAND)
 
