@@ -30,7 +30,7 @@ WEBHOOK_SECRET_TOKEN = "".join(
 ADMIN_CHANNEL_ID = os.getenv("ADMIN_CHANNEL_ID")
 
 abuse_attempts = 0
-ABUSEIPDB_API_KEY = os.getenv("ABUSEIPDB_API_KEY")
+ABUSEIPDB_TOKEN = os.getenv("ABUSEIPDB_TOKEN")
 
 bot = AsyncTeleBot(token=API_TOKEN)
 
