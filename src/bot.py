@@ -60,7 +60,7 @@ async def report_abuseip(remote_ip):
             "categories": "19",
             "timestamp": datetime.datetime.now().timestamp(),
         }
-        headers = {"Accept": "application/json", "Key": ABUSEIPDB_API_KEY}
+        headers = {"Accept": "application/json", "Key": ABUSEIPDB_TOKEN}
         async with session.post(url, headers=headers, params=querystring) as response:
             response = await response.json()
             return response
@@ -79,7 +79,7 @@ async def check_abuseip(remote_ip: str) -> dict:
             "ipAddress": remote_ip,
             "maxAgeInDays": "90",
         }
-        headers = {"Accept": "application/json", "Key": ABUSEIPDB_API_KEY}
+        headers = {"Accept": "application/json", "Key": ABUSEIPDB_TOKEN}
         async with session.get(url, headers=headers, params=querystring) as response:
             response = await response.json()
             data = response["data"]
