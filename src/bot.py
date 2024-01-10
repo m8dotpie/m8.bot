@@ -17,6 +17,7 @@ import os
 
 load_dotenv()
 
+
 secret_token_length = 20
 API_TOKEN = os.getenv("BOT_TOKEN")
 WEBHOOK_HOST = os.getenv("WEBHOOK_DOMAIN")
@@ -27,6 +28,9 @@ WEBHOOK_SECRET_TOKEN = "".join(
     random.choices(string.ascii_uppercase + string.digits, k=secret_token_length)
 )
 ADMIN_CHANNEL_ID = os.getenv("ADMIN_CHANNEL_ID")
+
+abuse_attempts = 0
+ABUSEIPDB_API_KEY = os.getenv("ABUSEIPDB_API_KEY")
 
 bot = AsyncTeleBot(token=API_TOKEN)
 
@@ -45,14 +49,71 @@ async def get_location(remote_ip: str) -> dict:
             return location_data
 
 
+async def report_abuseip(remote_ip):
+    global abuse_attempts
+    abuse_attempts += 1
+
+    async with aiohttp.ClientSession() as session:
+        url = "https://api.abuseipdb.com/api/v2/report"
+        querystring = {
+            "ip": remote_ip,
+            "categories": "19",
+            "timestamp": datetime.datetime.now().timestamp(),
+        }
+        headers = {"Accept": "application/json", "Key": ABUSEIPDB_API_KEY}
+        async with session.post(url, headers=headers, params=querystring) as response:
+            response = await response.json()
+            return response
+
+
+async def decide_abuseip(data: dict) -> str:
+    if data["abuseConfidenceScore"] >= 30:
+        return True
+    return False
+
+
+async def check_abuseip(remote_ip: str) -> dict:
+    async with aiohttp.ClientSession() as session:
+        url = "https://api.abuseipdb.com/api/v2/check"
+        querystring = {
+            "ipAddress": remote_ip,
+            "maxAgeInDays": "90",
+        }
+        headers = {"Accept": "application/json", "Key": ABUSEIPDB_API_KEY}
+        async with session.get(url, headers=headers, params=querystring) as response:
+            response = await response.json()
+            data = response["data"]
+            verdict = await decide_abuseip(data)
+
+            abuse_data = {
+                "confidence": data["abuseConfidenceScore"],
+                "reports": data["totalReports"],
+                "usageType": data["usageType"],
+                "verdict": await decide_abuseip(data),
+            }
+
+            if verdict:
+                await report_abuseip(remote_ip)
+
+            return abuse_data
+
+
 async def access_callback(log_entry):
     req = log_entry["request"]
     if req["uri"] != "/":
         return
     location_data = await get_location(req["remote_ip"])
+    abuse_data = await check_abuseip(req["remote_ip"])
+
+    if abuse_data["verdict"]:
+        return
+
     message = (
         f"CV access from {req['remote_ip']}.\n"
         f"Location: {location_data['city']}, {location_data['region']}, {location_data['country']}\n"
+        f"Abuse confidence: {abuse_data['confidence']}\n"
+        f"Abuse reports: {abuse_data['reports']}\n"
+        f"Usage type: {abuse_data['usageType']}\n"
         "#access #cv"
     )
     await send_admin_message(message)
@@ -89,6 +150,8 @@ async def construct_vps_status():
         f"Storage Usage:\n"
         f"  - Total: {storage_info.total / (1024 ** 3):.2f} GB\n"
         f"  - Used: {storage_info.used / (1024 ** 3):.2f} GB\n"
+        f"Access Info:\n"
+        f"  - Total abuse attempts: {abuse_attempts}\n"
         f"Last updated: {update_date}"
     )
 
